@@ -1,0 +1,4 @@
+paths:
+  - source: /opt/from/path
+    target: /opt/to/path
+    overwrite: always
