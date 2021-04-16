@@ -64,3 +64,23 @@ def test_never_overwrite():
     assert get_file_content('dir2/file3.txt') == 'Old Content\n'
     assert get_file_content('dir2/file4.txt') == 'File 4\n'
     cleanup_structures()
+
+
+def test_missing_target():
+    """Test that a missing target directory is correctly created."""
+    prepare_structures('overwrite_always')
+    config = {
+        'paths': [
+            {
+                'source': os.path.join(basepath, 'overwrite_always_source'),
+                'target': os.path.join(basepath, 'tmp/missing'),
+                'overwrite': 'always'
+            }
+        ]
+    }
+    distribute(config)
+    assert get_file_content('missing/file1.txt') == 'File 1\n'
+    assert get_file_content('missing/dir1/file2.txt') == 'File 2\n'
+    assert get_file_content('missing/dir2/file3.txt') == 'File 3\n'
+    assert get_file_content('missing/dir2/file4.txt') == 'File 4\n'
+    cleanup_structures()
