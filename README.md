@@ -1,46 +1,29 @@
-# OU Container Builder
+# OU Container Content
 
-Documentation for the OU Container Builder can be found here: https://mmh352.github.io/ou-container-builder/
-
-![Validation Status](https://github.com/mmh352/ou-container-builder/workflows/Validation/badge.svg) ![Tests](https://github.com/mmh352/ou-container-builder/workflows/Tests/badge.svg)
+![Validation Status](https://github.com/mmh352/ou-container-content/workflows/Validation/badge.svg) ![Tests](https://github.com/mmh352/ou-container-content/workflows/Tests/badge.svg)
 
 # Install and Run
 
-To run the OU Container Builder you need to install the following two requirements:
+To run the OU Container Content you need to install the following two requirements:
 
 * [Python 3.8 (or higher)](https://www.python.org/downloads/)
 * [Pipx](https://pipxproject.github.io/pipx/)
 
-Then, to install the OU Container Builder run
+Then, to install the OU Container Content run
 
 ```
-pipx install git+https://github.com/mmh352/ou-container-builder.git
+pipx install git+https://github.com/mmh352/ou-container-content.git
 ```
 
-You can then run the OU Container Builder using the following command:
+You can then run the OU Container Content using the following command:
 
 ```
-ou-container-builder
+ou-container-content
 ```
-
-## Demo
-
-To build the demo container:
-
-1. Clone the repository
-2. Change into the ```demo``` directory
-3. Run
-
-   ```
-   ou-container-builder
-   ```
-
-The resulting container listens for connections on port 8888 and it is recommended that you mount the
-```/home/ou-user``` directory as a volume.
 
 ## Development
 
-To work on the OU Container Builder you need to install an additional dependency:
+To work on the OU Container Content you need to install an additional dependency:
 
 * [Poetry](https://python-poetry.org/)
 
@@ -60,7 +43,7 @@ poetry shell
 You can now run
 
 ```
-ou-container-builder
+ou-container-content
 ```
 
 to run your development version of the code.
