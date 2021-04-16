@@ -27,9 +27,12 @@ def distribute_path(path: dict) -> None:
             for dirname in dirnames:
                 targetpath = os.path.join(path['target'], os.path.join(basepath, dirname)[len(path['source']) + 1:])
                 if not os.path.exists(targetpath):
-                    os.makedirs(targetpath)
+                    os.makedirs(targetpath, exist_ok=True)
             for filename in filenames:
                 targetpath = os.path.join(path['target'], os.path.join(basepath, filename)[len(path['source']) + 1:])
+                dirname = os.path.dirname(targetpath)
+                if not os.path.exists(dirname):
+                    os.makedirs(dirname, exist_ok=True)
                 exists = os.path.exists(targetpath)
                 overwrite = path['overwrite'] == 'always'
                 if not exists or overwrite:

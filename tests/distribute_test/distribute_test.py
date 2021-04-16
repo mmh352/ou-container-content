@@ -84,3 +84,20 @@ def test_missing_target():
     assert get_file_content('missing/dir2/file3.txt') == 'File 3\n'
     assert get_file_content('missing/dir2/file4.txt') == 'File 4\n'
     cleanup_structures()
+
+
+def test_missing_single_file():
+    """Test that a missing target directory is correctly created."""
+    prepare_structures('missing_single_file')
+    config = {
+        'paths': [
+            {
+                'source': os.path.join(basepath, 'missing_single_file_source'),
+                'target': os.path.join(basepath, 'tmp/missing'),
+                'overwrite': 'always'
+            }
+        ]
+    }
+    distribute(config)
+    assert get_file_content('missing/file1.txt') == 'File 1\n'
+    cleanup_structures()
