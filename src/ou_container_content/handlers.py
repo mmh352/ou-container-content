@@ -4,7 +4,7 @@ import tornado.web
 import tornado.websocket
 
 from asyncio import Event
-from importlib.resources import open_text
+from importlib.resources import open_binary
 from mimetypes import guess_type
 
 
@@ -60,8 +60,8 @@ class StaticHandler(tornado.web.RequestHandler):
         else:
             full_path = self._base_path
         elements = full_path.split('/')
-        with open_text(f'ou_container_content.frontend{"." if len(elements) > 1 else ""}{".".join(elements[:-1])}',
-                       elements[-1]) as in_f:
+        with open_binary(f'ou_container_content.frontend{"." if len(elements) > 1 else ""}{".".join(elements[:-1])}',
+                         elements[-1]) as in_f:
             mimetype = guess_type(elements[-1])
             if mimetype and mimetype[0]:
                 self.set_header('Content-Type', mimetype[0])

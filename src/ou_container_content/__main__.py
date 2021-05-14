@@ -20,6 +20,7 @@ def make_app():
         (r".*websocket", WebsocketHandler),
         (r".*build/(.*)", StaticHandler, {'base_path': 'build/'}),
         (r".*(global.css)", StaticHandler, {'base_path': ''}),
+        (r".*(ou-favicon-[0-9]+.png)", StaticHandler, {'base_path': ''}),
         (r".*", StaticHandler, {'base_path': 'index.html'}),
     ])
 
