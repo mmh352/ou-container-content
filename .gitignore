@@ -1,5 +1,10 @@
-.venv
+/node_modules/
+/public/build/
 .vscode
+.DS_Store
 __pycache__
-*.egg-info
-.pytest_cache
+.tox
+
+tmp
+demo
+development.yaml

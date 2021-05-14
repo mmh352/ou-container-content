@@ -1,5 +1,6 @@
 """Tests for the distribution functionality."""
 import os
+import pytest
 import shutil
 
 from ou_container_content.distributor import distribute
@@ -26,7 +27,8 @@ def get_file_content(path):
         return in_f.read()
 
 
-def test_always_overwrite():
+@pytest.mark.asyncio
+async def test_always_overwrite():
     """Test that the always overwriting works as designed."""
     prepare_structures('overwrite_always')
     config = {
@@ -38,7 +40,7 @@ def test_always_overwrite():
             }
         ]
     }
-    distribute(config)
+    await distribute(config)
     assert get_file_content('file1.txt') == 'File 1\n'
     assert get_file_content('dir1/file2.txt') == 'File 2\n'
     assert get_file_content('dir2/file3.txt') == 'File 3\n'
@@ -46,7 +48,8 @@ def test_always_overwrite():
     cleanup_structures()
 
 
-def test_never_overwrite():
+@pytest.mark.asyncio
+async def test_never_overwrite():
     """Test that the never overwriting works as designed."""
     prepare_structures('overwrite_never')
     config = {
@@ -58,7 +61,7 @@ def test_never_overwrite():
             }
         ]
     }
-    distribute(config)
+    await distribute(config)
     assert get_file_content('file1.txt') == 'Old Content\n'
     assert get_file_content('dir1/file2.txt') == 'File 2\n'
     assert get_file_content('dir2/file3.txt') == 'Old Content\n'
@@ -66,7 +69,8 @@ def test_never_overwrite():
     cleanup_structures()
 
 
-def test_missing_target():
+@pytest.mark.asyncio
+async def test_missing_target():
     """Test that a missing target directory is correctly created."""
     prepare_structures('overwrite_always')
     config = {
@@ -78,7 +82,7 @@ def test_missing_target():
             }
         ]
     }
-    distribute(config)
+    await distribute(config)
     assert get_file_content('missing/file1.txt') == 'File 1\n'
     assert get_file_content('missing/dir1/file2.txt') == 'File 2\n'
     assert get_file_content('missing/dir2/file3.txt') == 'File 3\n'
@@ -86,7 +90,8 @@ def test_missing_target():
     cleanup_structures()
 
 
-def test_missing_single_file():
+@pytest.mark.asyncio
+async def test_missing_single_file():
     """Test that a missing target directory is correctly created."""
     prepare_structures('missing_single_file')
     config = {
@@ -98,6 +103,6 @@ def test_missing_single_file():
             }
         ]
     }
-    distribute(config)
+    await distribute(config)
     assert get_file_content('missing/file1.txt') == 'File 1\n'
     cleanup_structures()

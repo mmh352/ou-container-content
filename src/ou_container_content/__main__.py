@@ -1,5 +1,7 @@
 """The OU Container Content distribution application commandline interface."""
 import click
+import tornado.ioloop
+import tornado.web
 
 from yaml import load
 try:
@@ -7,8 +9,19 @@ try:
 except ImportError:
     from yaml import Loader
 
-from .distributor import distribute
+from .handlers import WebsocketHandler, StaticHandler
+from .process import process
 from .validator import validate_settings
+
+
+def make_app():
+    """Build the tornado web application."""
+    return tornado.web.Application([
+        (r".*websocket", WebsocketHandler),
+        (r".*build/(.*)", StaticHandler, {'base_path': 'build/'}),
+        (r".*(global.css)", StaticHandler, {'base_path': ''}),
+        (r".*", StaticHandler, {'base_path': 'index.html'}),
+    ])
 
 
 @click.command()
@@ -21,7 +34,10 @@ def main(config: click.File):
     settings = load(config, Loader=Loader)
     settings = validate_settings(settings)
     if isinstance(settings, dict):
-        distribute(settings)
+        app = make_app()
+        app.listen(8888)
+        tornado.ioloop.IOLoop.current().add_callback(process, settings)
+        tornado.ioloop.IOLoop.current().start()
     else:
         click.echo(click.style('There are errors in your configuration settings:', fg='red'), err=True)
         click.echo(err=True)
