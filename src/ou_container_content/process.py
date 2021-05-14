@@ -15,6 +15,16 @@ async def process(settings):
     """
     send_message('Container starting up...')
     await distribute(settings)
+    send_message({
+        'component': 'scripts',
+        'state': 'complete',
+        'progress': 100,
+    })
+    send_message({
+        'component': 'services',
+        'state': 'complete',
+        'progress': 100,
+    })
     completed()
     await sleep(0.001)
     tornado.ioloop.IOLoop.current().stop()
