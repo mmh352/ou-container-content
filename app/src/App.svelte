@@ -90,7 +90,7 @@
 </script>
 
 <main>
-	<div class="absolute top-1/2 left-1/2 max-w-40 max-h-30 transform -translate-x-1/2 -translate-y-1/2 border-blue border-2 border-solid shadow-lg">
+	<div role="alert" class="absolute top-1/2 left-1/2 max-w-40 max-h-30 transform -translate-x-1/2 -translate-y-1/2 border-blue border-2 border-solid shadow-lg" aria-live="assertive">
 		<h1 class="px-3 py-2 border-gray-200 border-b-2 border-solid font-bold">Container starting up...</h1>
 		<ul class="px-3 py-2 flex justify-between">
 			{#each steps as step}
