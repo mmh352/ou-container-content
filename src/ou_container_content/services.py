@@ -14,7 +14,7 @@ async def start_services(settings):
     """
     if 'services' in settings:
         for idx, service in enumerate(settings['services']):
-            run(['service', service, 'start'])
+            run(['sudo', 'service', service, 'start'])
             send_message({
                 'component': 'services',
                 'state': 'active',
