@@ -5,6 +5,7 @@ from asyncio import sleep
 
 from .handlers import send_message, completed
 from .distributor import distribute
+from .scripts import run_scripts
 
 
 async def process(settings):
@@ -15,11 +16,7 @@ async def process(settings):
     """
     send_message('Container starting up...')
     await distribute(settings)
-    send_message({
-        'component': 'scripts',
-        'state': 'complete',
-        'progress': 100,
-    })
+    await run_scripts(settings)
     send_message({
         'component': 'services',
         'state': 'complete',

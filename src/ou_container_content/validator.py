@@ -27,6 +27,20 @@ schema = {
                 }
             }
         }
+    },
+    'scripts': {
+        'type': 'list',
+        'schema': {
+            'type': 'dict',
+            'requried': True,
+            'schema': {
+                'cmd': {
+                    'type': 'string',
+                    'required': True,
+                    'empty': False
+                }
+            }
+        }
     }
 }
 
