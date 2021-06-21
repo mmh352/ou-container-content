@@ -32,7 +32,7 @@ schema = {
         'type': 'list',
         'schema': {
             'type': 'dict',
-            'requried': True,
+            'required': True,
             'schema': {
                 'cmd': {
                     'type': 'string',
