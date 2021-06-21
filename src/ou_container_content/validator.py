@@ -41,6 +41,13 @@ schema = {
                 }
             }
         }
+    },
+    'services': {
+        'type': 'list',
+        'schema': {
+            'type': 'string',
+            'empty': False
+        }
     }
 }
 
