@@ -1,7 +1,7 @@
 """Run scripts."""
 import math
 
-from subprocess import run
+from asyncio.subprocess import create_subprocess_exec
 
 from .handlers import send_message
 
@@ -15,7 +15,8 @@ async def run_scripts(settings):
     if 'scripts' in settings:
         for idx, script in enumerate(settings['scripts']):
             if 'cmd' in script:
-                run(script['cmd'].split(' '))
+                proc = create_subprocess_exec(script['cmd'].split(' '))
+                await proc.wait()
             send_message({
                 'component': 'scripts',
                 'state': 'active',

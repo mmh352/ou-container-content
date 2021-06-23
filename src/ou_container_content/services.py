@@ -1,7 +1,7 @@
 """Start and stop services."""
 import math
 
-from subprocess import run
+from asyncio.subprocess import create_subprocess_exec
 
 from .handlers import send_message
 
@@ -14,7 +14,8 @@ async def start_services(settings):
     """
     if 'services' in settings:
         for idx, service in enumerate(settings['services']):
-            run(['sudo', 'service', service, 'start'])
+            proc = create_subprocess_exec(['sudo', 'service', service, 'start'])
+            await proc.wait()
             send_message({
                 'component': 'services',
                 'state': 'active',
