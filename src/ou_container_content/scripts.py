@@ -12,6 +12,11 @@ async def run_scripts(settings):
     :param config: The configuration with the scripts to run
     :type config: dict
     """
+    send_message({
+        'component': 'scripts',
+        'state': 'active',
+        'progress': 0,
+    })
     if 'scripts' in settings:
         for idx, script in enumerate(settings['scripts']):
             if 'cmd' in script:

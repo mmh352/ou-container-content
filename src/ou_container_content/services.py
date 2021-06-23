@@ -12,6 +12,11 @@ async def start_services(settings):
     :param config: The configuration with the services to start
     :type config: dict
     """
+    send_message({
+        'component': 'services',
+        'state': 'active',
+        'progress': 0,
+    })
     if 'services' in settings:
         for idx, service in enumerate(settings['services']):
             proc = await create_subprocess_exec('sudo', 'service', service, 'start')
