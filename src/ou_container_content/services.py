@@ -14,7 +14,7 @@ async def start_services(settings):
     """
     if 'services' in settings:
         for idx, service in enumerate(settings['services']):
-            proc = create_subprocess_exec(['sudo', 'service', service, 'start'])
+            proc = await create_subprocess_exec(['sudo', 'service', service, 'start'])
             await proc.wait()
             send_message({
                 'component': 'services',
