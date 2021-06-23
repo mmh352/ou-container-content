@@ -13,6 +13,9 @@ async def start_services(settings):
     :type config: dict
     """
     send_message({
+        'message': 'Starting services...'
+    })
+    send_message({
         'component': 'services',
         'state': 'active',
         'progress': 0,

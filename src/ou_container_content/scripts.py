@@ -13,6 +13,9 @@ async def run_scripts(settings):
     :type config: dict
     """
     send_message({
+        'message': 'Running startup scripts...'
+    })
+    send_message({
         'component': 'scripts',
         'state': 'active',
         'progress': 0,
