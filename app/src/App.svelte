@@ -1,5 +1,5 @@
 <script lang="ts">
-	let message = 'Container starting up...';
+	let message = 'Preparing the Computing Environment Content...';
 	const state = {
 		files: {
 			component: 'files',
@@ -65,7 +65,7 @@
 	let backoff = 0;
 	async function redirectToApp() {
 		if (backoff === 0) {
-			message = 'Waiting for the interface to become ready...';
+			message = 'Waiting for the interface to become available...';
 			state.interface.state = 'active';
 			backoff = 1000;
 			setTimeout(redirectToApp, 1000);
@@ -73,7 +73,7 @@
 			try {
 				const response = await fetch(window.location.href);
 				if (response.status === 200) {
-					message = 'Interface ready!';
+					message = 'Interface available. Redirecting you now...';
 					state.interface.state = 'complete';
 					window.location.reload();
 				} else {
