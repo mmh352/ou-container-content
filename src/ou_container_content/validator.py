@@ -29,15 +29,32 @@ schema = {
         }
     },
     'scripts': {
-        'type': 'list',
+        'type': 'dict',
         'schema': {
-            'type': 'dict',
-            'required': True,
-            'schema': {
-                'cmd': {
-                    'type': 'string',
-                    'required': True,
-                    'empty': False
+            'startup': {
+                'type': 'list',
+                'schema': {
+                    'type': 'dict',
+                    'schema': {
+                        'cmd': {
+                            'type': 'string',
+                            'required': True,
+                            'empty': False
+                        }
+                    }
+                }
+            },
+            'shutdown': {
+                'type': 'list',
+                'schema': {
+                    'type': 'dict',
+                    'schema': {
+                        'cmd': {
+                            'type': 'string',
+                            'required': True,
+                            'empty': False
+                        }
+                    }
                 }
             }
         }

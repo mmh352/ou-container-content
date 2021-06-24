@@ -20,8 +20,8 @@ async def run_scripts(settings):
         'state': 'active',
         'progress': 0,
     })
-    if 'scripts' in settings:
-        for idx, script in enumerate(settings['scripts']):
+    if 'scripts' in settings and 'startup' in settings['scripts']:
+        for idx, script in enumerate(settings['scripts']['startup']):
             if 'cmd' in script:
                 proc = await create_subprocess_exec(*script['cmd'].split(' '))
                 await proc.wait()
