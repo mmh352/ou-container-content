@@ -43,6 +43,6 @@ async def shutdown_services(settings):
     :type config: dict
     """
     if 'services' in settings:
-        for idx, service in enumerate(settings['services']):
+        for service in settings['services']:
             proc = await create_subprocess_exec('sudo', 'service', service, 'stop')
             await proc.wait()
