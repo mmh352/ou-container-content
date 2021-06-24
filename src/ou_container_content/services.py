@@ -34,3 +34,15 @@ async def start_services(settings):
         'state': 'complete',
         'progress': 100,
     })
+
+
+async def shutdown_services(settings):
+    """Shutdown all services.
+
+    :param config: The configuration with the services to stop
+    :type config: dict
+    """
+    if 'services' in settings:
+        for idx, service in enumerate(settings['services']):
+            proc = await create_subprocess_exec('sudo', 'service', service, 'stop')
+            await proc.wait()

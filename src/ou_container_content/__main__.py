@@ -10,7 +10,7 @@ except ImportError:
     from yaml import Loader
 
 from .handlers import WebsocketHandler, StaticHandler
-from .process import process
+from .process import startup, shutdown
 from .validator import validate_settings
 
 
@@ -30,15 +30,20 @@ def make_app():
               type=click.File(),
               default='/etc/module-content/config.yaml',
               help='The configuration file to use')
-def main(config: click.File):
+@click.argument('action')
+def main(config: click.File, action: str):
     """OU Container Content distribution."""
     settings = load(config, Loader=Loader)
     settings = validate_settings(settings)
     if isinstance(settings, dict):
-        app = make_app()
-        app.listen(8888)
-        tornado.ioloop.IOLoop.current().add_callback(process, settings)
-        tornado.ioloop.IOLoop.current().start()
+        if action == 'startup':
+            app = make_app()
+            app.listen(8888)
+            tornado.ioloop.IOLoop.current().add_callback(startup, settings)
+            tornado.ioloop.IOLoop.current().start()
+        elif action == 'shutdown':
+            tornado.ioloop.IOLoop.current().add_callback(shutdown, settings)
+            tornado.ioloop.IOLoop.current().start()
     else:
         click.echo(click.style('There are errors in your configuration settings:', fg='red'), err=True)
         click.echo(err=True)
