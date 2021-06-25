@@ -3,6 +3,13 @@ from cerberus import Validator
 from typing import Union
 
 
+def null_to_list(value):
+    """Coerce None values to an empty list."""
+    if value is None:
+        return []
+    return value
+
+
 schema = {
     'paths': {
         'type': 'list',
@@ -26,7 +33,8 @@ schema = {
                     'allowed': ['always', 'never', 'if-unchanged']
                 }
             }
-        }
+        },
+        'coerce': null_to_list
     },
     'scripts': {
         'type': 'dict',
@@ -43,7 +51,8 @@ schema = {
                             'empty': False
                         }
                     }
-                }
+                },
+                'coerce': null_to_list
             },
             'shutdown': {
                 'type': 'list',
@@ -56,7 +65,8 @@ schema = {
                             'empty': False
                         }
                     }
-                }
+                },
+                'coerce': null_to_list
             }
         }
     },
@@ -66,7 +76,8 @@ schema = {
         'schema': {
             'type': 'string',
             'empty': False
-        }
+        },
+        'coerce': null_to_list
     }
 }
 

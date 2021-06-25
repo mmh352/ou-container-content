@@ -13,3 +13,10 @@ def test_empty_settings():
     settings = {}
     result = validate_settings(settings)
     assert result == {}
+
+
+def test_null_paths():
+    """Tests that null paths are correctly coerced."""
+    settings = {'paths': None}
+    result = validate_settings(settings)
+    assert result == {'paths': []}
