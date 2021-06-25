@@ -16,13 +16,14 @@ async def precalculate(config: dict) -> None:
     :param config: The configuration with the paths to precalculate
     :type config: dict
     """
-    for path in config['paths']:
-        if os.path.exists(path['source']):
-            hashes = await calculate_hashes(path['source'])
-            if not os.path.exists(os.path.join(path['source'], '.ou-container-content')):
-                os.makedirs(os.path.join(path['source'], '.ou-container-content'), exist_ok=True)
-            with open(os.path.join(path['source'], '.ou-container-content', 'hashes.json'), 'w') as out_f:
-                json.dump(hashes, out_f)
+    if 'paths' in config:
+        for path in config['paths']:
+            if os.path.exists(path['source']):
+                hashes = await calculate_hashes(path['source'])
+                if not os.path.exists(os.path.join(path['source'], '.ou-container-content')):
+                    os.makedirs(os.path.join(path['source'], '.ou-container-content'), exist_ok=True)
+                with open(os.path.join(path['source'], '.ou-container-content', 'hashes.json'), 'w') as out_f:
+                    json.dump(hashes, out_f)
 
 
 async def distribute(config: dict) -> None:
@@ -39,32 +40,33 @@ async def distribute(config: dict) -> None:
         'state': 'active',
         'progress': 0,
     })
-    updates = []
-    for idx, path in enumerate(config['paths']):
-        send_message({
-            'component': 'files',
-            'state': 'active',
-            'progress': math.floor(100 / len(config['paths']) * idx),
-        })
-        updates.extend(await determine_updates(path))
-        await sleep(0.1)
-    send_message({
-        'message': 'Updating files...'
-    })
-    for idx, update in enumerate(updates):
-        if update[0] == 'dir':
-            os.makedirs(update[1], exist_ok=True)
-        elif update[0] == 'file':
-            dirname = os.path.dirname(update[2])
-            os.makedirs(dirname, exist_ok=True)
-            shutil.copyfile(update[1], update[2])
-        if idx % 10 == 0:
+    if 'paths' in config:
+        updates = []
+        for idx, path in enumerate(config['paths']):
             send_message({
                 'component': 'files',
                 'state': 'active',
-                'progress': math.floor(100 / len(updates) * idx),
+                'progress': math.floor(100 / len(config['paths']) * idx),
             })
-            await sleep(0.001)
+            updates.extend(await determine_updates(path))
+            await sleep(0.1)
+        send_message({
+            'message': 'Updating files...'
+        })
+        for idx, update in enumerate(updates):
+            if update[0] == 'dir':
+                os.makedirs(update[1], exist_ok=True)
+            elif update[0] == 'file':
+                dirname = os.path.dirname(update[2])
+                os.makedirs(dirname, exist_ok=True)
+                shutil.copyfile(update[1], update[2])
+            if idx % 10 == 0:
+                send_message({
+                    'component': 'files',
+                    'state': 'active',
+                    'progress': math.floor(100 / len(updates) * idx),
+                })
+                await sleep(0.001)
     send_message({
         'message': 'Your files have been updated.'
     })
