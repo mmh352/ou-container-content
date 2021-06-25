@@ -8,7 +8,6 @@ schema = {
         'type': 'list',
         'schema': {
             'type': 'dict',
-            'required': True,
             'schema': {
                 'source': {
                     'type': 'string',
