@@ -6,6 +6,7 @@ from typing import Union
 schema = {
     'paths': {
         'type': 'list',
+        'required': False,
         'schema': {
             'type': 'dict',
             'schema': {
@@ -29,6 +30,7 @@ schema = {
     },
     'scripts': {
         'type': 'dict',
+        'required': False,
         'schema': {
             'startup': {
                 'type': 'list',
@@ -60,6 +62,7 @@ schema = {
     },
     'services': {
         'type': 'list',
+        'required': False,
         'schema': {
             'type': 'string',
             'empty': False
@@ -77,10 +80,10 @@ def validate_settings(settings: dict) -> Union[dict, bool]:
     :rtype: boolean or dict
     """
     validator = Validator(schema)
-    if settings and validator.validate(settings):
-        return validator.normalized(settings)
-    elif settings is None:
-        return ['Your configuration file is empty']
+    if settings is None:
+        return {}
+    elif validator.validate(settings):
+        return validator.document
     else:
         error_list = []
 
