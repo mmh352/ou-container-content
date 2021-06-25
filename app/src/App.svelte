@@ -1,5 +1,5 @@
 <script lang="ts">
-	let message = 'Preparing the Computing Environment Content...';
+	let message = 'Preparing the computing environment content...';
 	const state = {
 		files: {
 			component: 'files',
