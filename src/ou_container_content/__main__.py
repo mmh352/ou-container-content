@@ -10,7 +10,7 @@ except ImportError:
     from yaml import Loader
 
 from .handlers import WebsocketHandler, StaticHandler
-from .process import startup, shutdown
+from . import process
 from .validator import validate_settings
 
 
@@ -25,25 +25,18 @@ def make_app():
     ])
 
 
-@click.command()
+@click.group()
 @click.option('-c', '--config',
               type=click.File(),
               default='/etc/module-content/config.yaml',
               help='The configuration file to use')
-@click.argument('action')
-def main(config: click.File, action: str):
+@click.pass_context
+def main(ctx: click.Context, config: click.File):
     """OU Container Content distribution."""
     settings = load(config, Loader=Loader)
     settings = validate_settings(settings)
     if isinstance(settings, dict):
-        if action == 'startup':
-            app = make_app()
-            app.listen(8888)
-            tornado.ioloop.IOLoop.current().add_callback(startup, settings)
-            tornado.ioloop.IOLoop.current().start()
-        elif action == 'shutdown':
-            tornado.ioloop.IOLoop.current().add_callback(shutdown, settings)
-            tornado.ioloop.IOLoop.current().start()
+        ctx.obj = {'settings': settings}
     else:
         click.echo(click.style('There are errors in your configuration settings:', fg='red'), err=True)
         click.echo(err=True)
@@ -53,6 +46,36 @@ def main(config: click.File, action: str):
 
         raise click.Abort()
 
+
+@click.command()
+@click.pass_context
+def startup(ctx: click.Context):
+    """Run the startup process."""
+    app = make_app()
+    app.listen(8888)
+    tornado.ioloop.IOLoop.current().add_callback(process.startup, ctx.obj['settings'])
+    tornado.ioloop.IOLoop.current().start()
+
+
+@click.command()
+@click.pass_context
+def shutdown(ctx: click.Context):
+    """Run the shutdown process."""
+    tornado.ioloop.IOLoop.current().add_callback(process.shutdown, ctx.obj['settings'])
+    tornado.ioloop.IOLoop.current().start()
+
+
+@click.command()
+@click.pass_context
+def prepare(ctx: click.Context):
+    """Run the distribution preparation process."""
+    tornado.ioloop.IOLoop.current().add_callback(process.prepare, ctx.obj['settings'])
+    tornado.ioloop.IOLoop.current().start()
+
+
+main.add_command(startup)
+main.add_command(shutdown)
+main.add_command(prepare)
 
 if __name__ == '__main__':
     main()

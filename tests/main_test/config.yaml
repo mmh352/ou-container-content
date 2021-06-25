@@ -1,4 +1,4 @@
 paths:
-  - source: /opt/from/path
-    target: /opt/to/path
+  - source: tests/main_test/content_source
+    target: tests/main_test/content_target
     overwrite: always

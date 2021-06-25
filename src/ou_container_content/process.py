@@ -4,16 +4,16 @@ import tornado
 from asyncio import sleep
 
 from .handlers import send_message, completed
-from .distributor import distribute
+from .distributor import distribute, precalculate
 from .scripts import run_startup_scripts, run_shutdown_scripts
 from .services import start_services, shutdown_services
 
 
 async def startup(settings):
-    """Run the startup process steps.
+    """Run the startup process.
 
-    :param config: The configuration
-    :type config: dict
+    :param settings: The settings to use for startup
+    :type settings: dict
     """
     send_message('Container starting up...')
     await distribute(settings)
@@ -25,12 +25,23 @@ async def startup(settings):
 
 
 async def shutdown(settings):
-    """Run the shutdown process steps.
+    """Run the shutdown process.
 
-    :param config: The configuration
-    :type config: dict
+    :param settings: The settings to use for shutdown
+    :type settings: dict
     """
     await shutdown_services(settings)
     await run_shutdown_scripts(settings)
+    await sleep(0.001)
+    tornado.ioloop.IOLoop.current().stop()
+
+
+async def prepare(settings):
+    """Run the content preparation process.
+
+    :param settings: The settings to use for shutdown
+    :type settings: dict
+    """
+    await precalculate(settings)
     await sleep(0.001)
     tornado.ioloop.IOLoop.current().stop()
