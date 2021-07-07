@@ -3,7 +3,7 @@ import tornado
 
 from asyncio import sleep
 
-from .handlers import send_message, completed
+from .handlers import send_message, completed, messageReceivedEvent
 from .distributor import distribute, precalculate
 from .scripts import run_startup_scripts, run_shutdown_scripts
 from .services import start_services, shutdown_services
@@ -21,6 +21,7 @@ async def startup(settings):
     await start_services(settings)
     completed()
     await sleep(0.001)
+    await messageReceivedEvent.wait()
     tornado.ioloop.IOLoop.current().stop()
 
 

@@ -15,6 +15,7 @@ messages = [
 ]
 complete = False
 messageEvent = Event()
+messageReceivedEvent = Event()
 
 
 def send_message(msg: dict):
@@ -83,3 +84,4 @@ class WebsocketHandler(tornado.websocket.WebSocketHandler):
                 await self.write_message(json.dumps(messages[next_idx]))
                 next_idx = next_idx + 1
         self.close()
+        messageReceivedEvent.set()
