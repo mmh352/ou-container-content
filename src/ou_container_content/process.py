@@ -1,4 +1,5 @@
 """Handle the startup/shutdown process."""
+import os
 import tornado
 
 from asyncio import sleep
@@ -21,7 +22,8 @@ async def startup(settings):
     await start_services(settings)
     completed()
     await sleep(0.001)
-    await messageReceivedEvent.wait()
+    if 'JUPYTERHUB_API_TOKEN' in os.environ:
+        await messageReceivedEvent.wait()
     tornado.ioloop.IOLoop.current().stop()
 
 
