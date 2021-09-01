@@ -29,3 +29,23 @@ jobs:
       run: |
         mkdir tmp
         tox -e ${{matrix.python-version}}
+
+  validation:
+    runs-on: ubuntu-20.04
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Install Base Dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install python3-venv
+        sudo pip3 install poetry
+
+    - name: Install Python Dependencies
+      run: |
+        poetry install
+
+    - name: Run Validation
+      run: |
+        poetry run flake8 src
