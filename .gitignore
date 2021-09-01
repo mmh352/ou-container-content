@@ -4,7 +4,8 @@
 .DS_Store
 __pycache__
 .tox
-
+.pytest_cache
+.venv
 tmp
 demo
 development.yaml
