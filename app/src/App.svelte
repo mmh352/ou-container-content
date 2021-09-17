@@ -95,7 +95,7 @@
 		<ul class="px-3 py-2 flex justify-between">
 			{#each steps as step}
 				<li>
-					<svg viewBox="0 0 24 24" class="w-16 h-16 p-2 sm:w-24 sm:h-24 sm:p-4 fill-current {state[step.component].state === 'complete' ? 'text-green' : (state[step.component].state === 'active' ? 'text-blue animate-pulse' : 'text-gray-300')}">
+					<svg aria-hidden="true" viewBox="0 0 24 24" class="w-16 h-16 p-2 sm:w-24 sm:h-24 sm:p-4 fill-current {state[step.component].state === 'complete' ? 'text-green' : (state[step.component].state === 'active' ? 'text-blue animate-pulse' : 'text-gray-300')}">
 						<path d={step.svg} />
 					</svg>
 					{#if state[step.component].state === 'active'}
