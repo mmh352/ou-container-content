@@ -1,6 +1,6 @@
 # Changelog
 
-## Dev
+## 1.0.0-b2
 
 * **Update**: Fixed an accessibility issue with the progress icons
 

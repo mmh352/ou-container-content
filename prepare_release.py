@@ -2,7 +2,7 @@
 import re
 
 
-VERSION = '1.0.0-b1'
+VERSION = '1.0.0-b2'
 
 
 def readlines(filename: str) -> list[str]:
@@ -21,12 +21,13 @@ def update_version(filename: str, pattern: str, version: str):
     """Update the version in a file."""
     def replace_version(line: str) -> str:
         if re.match(pattern, line):
-            return re.sub(r'[0-9]+\.[0-9]+\.[0-9]+(-b[0-9]+)?', version, line)
+            return re.sub(pattern, fr'\g<1>{version}\g<2>', line)
         else:
             return line
 
     writelines(filename, map(replace_version, readlines(filename)))
 
 
-update_version('app/package.json', r'^  "version": "[0-9]+\.[0-9]+\.[0-9]+(-b[0-9]+)?",$', VERSION)
-update_version('pyproject.toml', r'^version = "[0-9]+\.[0-9]+\.[0-9]+(-b[0-9]+)?"$',  VERSION)
+update_version('app/package.json', r'(^  "version": ")[0-9]+\.[0-9]+\.[0-9]+(?:-b[0-9]+)?(",$)', VERSION)
+update_version('pyproject.toml', r'(^version = ")[0-9]+\.[0-9]+\.[0-9]+(?:-b[0-9]+)?("$)',  VERSION)
+update_version('CHANGELOG.md', r'(^## )Dev($)',  VERSION)
