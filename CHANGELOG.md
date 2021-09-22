@@ -1,6 +1,6 @@
 # Changelog
 
-## Dev
+## 1.0.0
 
 * **New**: Added a command-line log message output
 
