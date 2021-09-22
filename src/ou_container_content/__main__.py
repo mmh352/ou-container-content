@@ -1,5 +1,6 @@
 """The OU Container Content distribution application commandline interface."""
 import click
+import os
 import tornado.ioloop
 import tornado.web
 
@@ -9,7 +10,7 @@ try:
 except ImportError:
     from yaml import Loader
 
-from .handlers import WebsocketHandler, StaticHandler
+from .handlers import WebsocketHandler, StaticHandler, console_handler
 from . import process
 from .validator import validate_settings
 
@@ -37,6 +38,8 @@ def main(ctx: click.Context, config: click.File):
     settings = validate_settings(settings)
     if isinstance(settings, dict):
         ctx.obj = {'settings': settings}
+        if 'JUPYTERHUB_API_TOKEN' not in os.environ:
+            tornado.ioloop.IOLoop.current().add_callback(console_handler)
     else:
         click.echo(click.style('There are errors in your configuration settings:', fg='red'), err=True)
         click.echo(err=True)

@@ -8,11 +8,7 @@ from importlib.resources import open_binary
 from mimetypes import guess_type
 
 
-messages = [
-    {
-        'message': 'Copying your files...'
-    }
-]
+messages = []
 complete = False
 messageEvent = Event()
 messageReceivedEvent = Event()
@@ -85,3 +81,19 @@ class WebsocketHandler(tornado.websocket.WebSocketHandler):
                 next_idx = next_idx + 1
         self.close()
         messageReceivedEvent.set()
+
+
+async def console_handler():
+    """Console handler printing messages to the console."""
+    next_idx = 0
+    for message in messages:
+        if 'message' in message:
+            print(message['message'])  # noqa: T001
+        next_idx = next_idx + 1
+    while not complete:
+        await messageEvent.wait()
+        while next_idx < len(messages):
+            if 'message' in messages[next_idx]:
+                print(messages[next_idx]['message'])  # noqa: T001
+            next_idx = next_idx + 1
+    messageReceivedEvent.set()
