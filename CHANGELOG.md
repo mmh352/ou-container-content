@@ -1,6 +1,6 @@
 # Changelog
 
-## Dev
+## 1.0.2
 
 * **Bugfix**: Fix a bug causing the prepare command to fail
 
