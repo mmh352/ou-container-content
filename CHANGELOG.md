@@ -1,5 +1,9 @@
 # Changelog
 
+## Dev
+
+* **Bugfix**: Fix a bug causing the prepare command to fail
+
 ## 1.0.1
 
 * **Update**: Responsiveness update in the hash calculation

@@ -38,8 +38,6 @@ def main(ctx: click.Context, config: click.File):
     settings = validate_settings(settings)
     if isinstance(settings, dict):
         ctx.obj = {'settings': settings}
-        if 'JUPYTERHUB_API_TOKEN' not in os.environ:
-            tornado.ioloop.IOLoop.current().add_callback(console_handler)
     else:
         click.echo(click.style('There are errors in your configuration settings:', fg='red'), err=True)
         click.echo(err=True)
@@ -56,6 +54,8 @@ def startup(ctx: click.Context):
     """Run the startup process."""
     app = make_app()
     app.listen(8888)
+    if 'JUPYTERHUB_API_TOKEN' not in os.environ:
+        tornado.ioloop.IOLoop.current().add_callback(console_handler)
     tornado.ioloop.IOLoop.current().add_callback(process.startup, ctx.obj['settings'])
     tornado.ioloop.IOLoop.current().start()
 
