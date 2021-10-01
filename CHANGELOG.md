@@ -1,5 +1,9 @@
 # Changelog
 
+## Dev
+
+* **Update**: Responsiveness update in the hash calculation
+
 ## 1.0.0
 
 * **New**: Added a command-line log message output

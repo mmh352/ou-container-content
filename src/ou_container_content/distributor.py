@@ -4,8 +4,10 @@ import math
 import os
 import shutil
 
+from aiofile import async_open
 from asyncio import sleep
 from hashlib import sha512
+from pathlib import Path
 
 from .handlers import send_message
 
@@ -66,7 +68,7 @@ async def distribute(config: dict) -> None:
                     'state': 'active',
                     'progress': math.floor(100 / len(updates) * idx),
                 })
-                await sleep(0.001)
+                await sleep(0)
     send_message({
         'message': 'Your files have been updated.'
     })
@@ -94,7 +96,7 @@ async def determine_updates(path: dict) -> list:
         with open(os.path.join(path['source'], '.ou-container-content', 'hashes.json'), 'w') as out_f:
             json.dump(hashes, out_f)
     if os.path.exists(path['source']):
-        for basepath, dirnames, filenames in os.walk(path['source']):
+        async for basepath, dirnames, filenames in async_walk(path['source']):
             for dirname in dirnames:
                 if dirname != '.ou-container-content':
                     targetpath = os.path.join(path['target'],
@@ -126,11 +128,36 @@ async def calculate_hashes(path: str) -> dict:
     :retype: dict
     """
     hashes = {}
-    for basepath, dirnames, filenames in os.walk(path):
+    async for basepath, dirnames, filenames in async_walk(path):
         if '.ou-container-content' not in basepath:
             for filename in filenames:
                 filepath = os.path.join(basepath, filename)
-                with open(filepath, 'rb') as in_f:
-                    hash = sha512(in_f.read())
+                async with async_open(filepath, 'rb') as in_f:
+                    hash = sha512(await in_f.read())
                 hashes[filepath[len(path) + 1:]] = hash.hexdigest()
     return hashes
+
+
+async def async_walk(path: str) -> None:
+    """Asynchronously walk a directory tree.
+
+    This is an asynchronous equivalent to os.walk and is achieved through calling ```await sleep(0)``` after iterating
+    through a single directory.
+
+    :param path: The path to walk the directory tree from
+    :type path: str
+    """
+    directory = Path(path)
+    if directory.exists():
+        dirnames = []
+        filenames = []
+        for entry in directory.iterdir():
+            if entry.is_dir():
+                dirnames.append(entry.name)
+            else:
+                filenames.append(entry.name)
+        yield [path, dirnames, filenames]
+        await sleep(0)
+        for dirname in dirnames:
+            async for entry in async_walk(os.path.join(path, dirname)):
+                yield entry
