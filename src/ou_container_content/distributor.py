@@ -4,7 +4,6 @@ import math
 import os
 import shutil
 
-from aiofile import async_open
 from asyncio import sleep
 from hashlib import sha512
 from pathlib import Path
@@ -132,8 +131,9 @@ async def calculate_hashes(path: str) -> dict:
         if '.ou-container-content' not in basepath:
             for filename in filenames:
                 filepath = os.path.join(basepath, filename)
-                async with async_open(filepath, 'rb') as in_f:
-                    hash = sha512(await in_f.read())
+                with open(filepath, 'rb') as in_f:
+                    hash = sha512(in_f.read())
+                await sleep(0)
                 hashes[filepath[len(path) + 1:]] = hash.hexdigest()
     return hashes
 
