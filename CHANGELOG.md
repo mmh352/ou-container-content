@@ -1,6 +1,6 @@
 # Changelog
 
-## Dev
+## 1.0.1
 
 * **Update**: Responsiveness update in the hash calculation
 
