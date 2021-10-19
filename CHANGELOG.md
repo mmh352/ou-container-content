@@ -1,6 +1,6 @@
 # Changelog
 
-## Dev
+## 1.0.4
 
 * **Bugfix**: Ignore any errors in the hash calculation step
 
