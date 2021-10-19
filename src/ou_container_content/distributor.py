@@ -131,10 +131,13 @@ async def calculate_hashes(path: str) -> dict:
         if '.ou-container-content' not in basepath:
             for filename in filenames:
                 filepath = os.path.join(basepath, filename)
-                with open(filepath, 'rb') as in_f:
-                    hash = sha512(in_f.read())
-                await sleep(0)
-                hashes[filepath[len(path) + 1:]] = hash.hexdigest()
+                try:
+                    with open(filepath, 'rb') as in_f:
+                        hash = sha512(in_f.read())
+                    await sleep(0)
+                    hashes[filepath[len(path) + 1:]] = hash.hexdigest()
+                except Exception:
+                    pass
     return hashes
 
 

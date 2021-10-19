@@ -1,5 +1,9 @@
 # Changelog
 
+## Dev
+
+* **Bugfix**: Ignore any errors in the hash calculation step
+
 ## 1.0.3
 
 * **Bugfix**: Fix aiofile failing on arm devices
