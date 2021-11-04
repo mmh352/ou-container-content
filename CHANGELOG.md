@@ -1,6 +1,6 @@
 # Changelog
 
-## Dev
+## 1.1.0
 
 * **New**: Add a command-line action to run only the content distribution
 * **Update**: Small update performance fix
