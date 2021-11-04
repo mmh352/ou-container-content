@@ -88,13 +88,13 @@ async def determine_updates(path: dict) -> list:
     :type path: dict
     """
     updates = []
-    if not os.path.exists(os.path.join(path['source'], '.ou-container-content', 'hashes.json')):
-        hashes = await calculate_hashes(path['source'])
-        if not os.path.exists(os.path.join(path['source'], '.ou-container-content')):
-            os.makedirs(os.path.join(path['source'], '.ou-container-content'), exist_ok=True)
-        with open(os.path.join(path['source'], '.ou-container-content', 'hashes.json'), 'w') as out_f:
-            json.dump(hashes, out_f)
     if os.path.exists(path['source']):
+        if not os.path.exists(os.path.join(path['source'], '.ou-container-content', 'hashes.json')):
+            hashes = await calculate_hashes(path['source'])
+            if not os.path.exists(os.path.join(path['source'], '.ou-container-content')):
+                os.makedirs(os.path.join(path['source'], '.ou-container-content'), exist_ok=True)
+            with open(os.path.join(path['source'], '.ou-container-content', 'hashes.json'), 'w') as out_f:
+                json.dump(hashes, out_f)
         async for basepath, dirnames, filenames in async_walk(path['source']):
             for dirname in dirnames:
                 if dirname != '.ou-container-content':
@@ -104,24 +104,22 @@ async def determine_updates(path: dict) -> list:
                         updates.append(('dir', targetpath))
         with open(os.path.join(path['source'], '.ou-container-content', 'hashes.json')) as in_f:
             source_hashes = json.load(in_f)
-        target_hashes = await calculate_hashes(path['target'])
         for filepath, hash in source_hashes.items():
-            if filepath not in target_hashes:
+            if not os.path.exists(os.path.join(path['target'], filepath)):
                 updates.append(('file',
                                 os.path.join(path['source'], filepath),
                                 os.path.join(path['target'], filepath)))
-            elif target_hashes[filepath] != hash:
-                if path['overwrite'] == 'always':
-                    updates.append(('file',
-                                    os.path.join(path['source'], filepath),
-                                    os.path.join(path['target'], filepath)))
+            elif path['overwrite'] == 'always' and hash != calculate_hash(os.path.join(path['target'], filepath)):
+                updates.append(('file',
+                                os.path.join(path['source'], filepath),
+                                os.path.join(path['target'], filepath)))
     return updates
 
 
 async def calculate_hashes(path: str) -> dict:
     """Calculate the hashes for all files in ``path``.
 
-    :param path: The path for which to calculate the hases
+    :param path: The path for which to calculate the hashes
     :type path: str
     :return: The calculated hashes
     :retype: dict
@@ -132,13 +130,24 @@ async def calculate_hashes(path: str) -> dict:
             for filename in filenames:
                 filepath = os.path.join(basepath, filename)
                 try:
-                    with open(filepath, 'rb') as in_f:
-                        hash = sha512(in_f.read())
                     await sleep(0)
-                    hashes[filepath[len(path) + 1:]] = hash.hexdigest()
+                    hashes[filepath[len(path) + 1:]] = calculate_hash(filepath)
                 except Exception:
                     pass
     return hashes
+
+
+def calculate_hash(path: str) -> str:
+    """Calculate the hash for a single file at ``path``.
+
+    :param path: The path for which to calculate the hash
+    :type path: str
+    :return: The calculated hash
+    :retype: str
+    """
+    with open(path, 'rb') as in_f:
+        hash = sha512(in_f.read())
+    return hash.hexdigest()
 
 
 async def async_walk(path: str) -> None:

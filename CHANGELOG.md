@@ -3,6 +3,7 @@
 ## Dev
 
 * **New**: Add a command-line action to run only the content distribution
+* **Update**: Small update performance fix
 
 ## 1.0.4
 
