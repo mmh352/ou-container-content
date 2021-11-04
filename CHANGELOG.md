@@ -1,5 +1,9 @@
 # Changelog
 
+## Dev
+
+* **New**: Add a command-line action to run only the content distribution
+
 ## 1.0.4
 
 * **Bugfix**: Ignore any errors in the hash calculation step

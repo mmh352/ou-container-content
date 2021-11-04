@@ -76,9 +76,18 @@ def prepare(ctx: click.Context):
     tornado.ioloop.IOLoop.current().start()
 
 
+@click.command()
+@click.pass_context
+def distribute_content(ctx: click.Context):
+    """Run the content distribution only."""
+    tornado.ioloop.IOLoop.current().add_callback(process.only_distribute_files, ctx.obj['settings'])
+    tornado.ioloop.IOLoop.current().start()
+
+
 main.add_command(startup)
 main.add_command(shutdown)
 main.add_command(prepare)
+main.add_command(distribute_content)
 
 if __name__ == '__main__':
     main()

@@ -46,3 +46,13 @@ async def prepare(settings):
     await precalculate(settings)
     await sleep(0.001)
     tornado.ioloop.IOLoop.current().stop()
+
+
+async def only_distribute_files(settings):
+    """Run only the content distribution process and exist.
+
+    :param settings: The settings to use for distributing files
+    :type settings: dict
+    """
+    await distribute(settings)
+    tornado.ioloop.IOLoop.current().stop()
